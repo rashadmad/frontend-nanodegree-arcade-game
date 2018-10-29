@@ -22,8 +22,8 @@ modalButton.id = "modalButton";
 // When the user clicks on the button, open the modal
 modalButton.onclick = function() {
     modal.style.display = "none";
-    player.health = 4;
-    player.stonesCollected = 0;
+    character.health = 4;
+    character.stonesCollected = 0;
     allHearts = [];
     allHearts.push(heart1, heart2, heart3, heart4);
 }

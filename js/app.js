@@ -5,19 +5,24 @@ const THIRDLANESPAWN = 80;
 
 const offScreen = -60;
 
+const FIRSTCOLUMN = function (x) {return x <= 10};
+const SECONDCOLUMN = function (x) { return x >= 101 && x <= 200};
+const THIRDCOLUMN = function (x) { return x >= 251 && x <= 298};
+const FOURTHCOLUMN = function (x) { return x >= 300 && x <= 398};
+const FIFTHCOLUMN = function (x) { return x >= 401 };
 
 let currentColumn = function (xCoordinate) {
   let result = '';
   if (xCoordinate >= 4 && xCoordinate <= 101) {
-    result = 'firstColumn'
+    result = 'FIRSTCOLUMN'
   } else if (xCoordinate >= 102 && xCoordinate <= 200) {
-    result = 'secondColumn'
+    result = 'SECONDCOLUMN'
   } else if (xCoordinate >= 201 && xCoordinate <= 298) {
-    result = 'thirdColumn'
+    result = 'THIRDCOLUMN'
   } else if (xCoordinate >= 300 && xCoordinate <= 398) {
-    result = 'fourthColumn'
+    result = 'FOURTHCOLUMN'
   } else {
-    result = 'fifthColumn'
+    result = 'FIFTHCOLUMN'
   }
   return result;
 };
@@ -75,11 +80,11 @@ class Enemy {
 
   currentColumn() {
     //column choices
-    const firstColumn = function (x) {return x <= 10};
-    const secondColumn = function (x) { return x >= 101 && x <= 200};
-    const thirdColumn = function (x) { return x >= 251 && x <= 298};
-    const fourthColumn = function (x) { return x >= 300 && x <= 398};
-    const fifthColumn = function (x) { return x >= 401 };
+    const FIRSTCOLUMN = function (x) {return x <= 10};
+    const SECONDCOLUMN = function (x) { return x >= 101 && x <= 200};
+    const THIRDCOLUMN = function (x) { return x >= 251 && x <= 298};
+    const FOURTHCOLUMN = function (x) { return x >= 300 && x <= 398};
+    const FIFTHCOLUMN = function (x) { return x >= 401 };
     }
 }
 
@@ -275,7 +280,7 @@ if (playerInput === 'boy') {
 } else {
   characterSelect = boy;
 }
-const player = new Character(characterSelect);
+const character = new Character(characterSelect);
 
 const allEnemies = [];
 //red
@@ -307,7 +312,7 @@ let allHearts = [];
 allHearts.push(heart1, heart2, heart3, heart4);
 
 // This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
+// character.handleInput() method. You don't need to modify this.
 document.addEventListener('keyup', function(e) {
 
   var allowedKeys = {
@@ -324,5 +329,5 @@ document.addEventListener('keyup', function(e) {
 
   };
 
-  player.handleInput(allowedKeys[e.keyCode]);
+  character.handleInput(allowedKeys[e.keyCode]);
 });
