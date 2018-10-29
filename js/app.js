@@ -5,11 +5,7 @@ const THIRDLANESPAWN = 80;
 
 const offScreen = -60;
 
-const FIRSTCOLUMN = function (x) {return x <= 10};
-const SECONDCOLUMN = function (x) { return x >= 101 && x <= 200};
-const THIRDCOLUMN = function (x) { return x >= 251 && x <= 298};
-const FOURTHCOLUMN = function (x) { return x >= 300 && x <= 398};
-const FIFTHCOLUMN = function (x) { return x >= 401 };
+
 
 let currentColumn = function (xCoordinate) {
   let result = '';
@@ -39,10 +35,16 @@ let currentRow = function(objectWithYCoordinate) {
   return result
   }
 
+//bug skins
+const blinkySkin = 'images/enemy-bug-blinky.png';
+const clydeSkin = 'images/enemy-bug.png';
+const inkySkin = 'images/enemy-bug-inky.png';
+const pinkySkin = 'images/enemy-bug-pinky.png';
+
 // Enemies our player must avoid
 class Enemy {
 
-  constructor(speed, lane, sprite = 'images/enemy-bug.png') {
+  constructor(speed, lane, sprite = clydeSkin) {
     //speed
     this.speed = speed;
     this.offScreen = offScreen;
@@ -76,7 +78,7 @@ class Enemy {
     } else {
       this.resetPosition();
     }
-  };
+  }
 
   currentColumn() {
     //column choices
@@ -84,7 +86,7 @@ class Enemy {
     const SECONDCOLUMN = function (x) { return x >= 101 && x <= 200};
     const THIRDCOLUMN = function (x) { return x >= 251 && x <= 298};
     const FOURTHCOLUMN = function (x) { return x >= 300 && x <= 398};
-    const FIFTHCOLUMN = function (x) { return x >= 401 };
+    const FIFTHCOLUMN = function (x) { return x >= 401};
     }
 }
 
@@ -112,8 +114,7 @@ class Character {
   }
 
   takeDamage() {
-    this.respawn();
-
+    console.log("ouch");
     //lower health
     this.health -= 1;
     allHearts.pop();
@@ -123,10 +124,12 @@ class Character {
       headerText.textContent = "You Died";
       modal.style.display = "block";
     }
+    this.respawn();
   }
 
   //reset position
   respawn() {
+    console.log("respawn")
     this.x = this.startingX;
     this.y = this.startingY;
   }
@@ -208,15 +211,13 @@ class Character {
           this.respawn();
       }
     }
-    console.log(this.x + " " + this.y);
   }
 
   //collision system for our bugs
   update() {
     for (let enemy of allEnemies) {
-
       if (currentRow(enemy) === currentRow(this) &&
-           currentColumn(enemy.x-10) === currentColumn(this.x)) {
+           currentColumn(enemy.x-buffer) === currentColumn(this.x)) {
          this.takeDamage()
       }
     }
@@ -255,11 +256,6 @@ const girlHorns = 'images/char-horn-girl.png';
 const pinkGirl = 'images/char-pink-girl.png';
 const girlPrincess = 'images/char-princess-girl.png';
 
-//bug skins
-const blinkySkin = 'images/enemy-bug-blinky.png';
-const clydeSkin = 'images/enemy-bug.png';
-const inkySkin = 'images/enemy-bug-inky.png';
-const pinkySkin = 'images/enemy-bug-pinky.png';
 
 //the goal is for the charicter to gather all of the stones in the river
 // Now instantiate your objects.
