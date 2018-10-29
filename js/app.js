@@ -75,7 +75,7 @@ class Enemy {
 
   currentColumn() {
     //column choices
-    const firstColumn = function (x) {return x <= 101};
+    const firstColumn = function (x) {return x <= 10};
     const secondColumn = function (x) { return x >= 101 && x <= 200};
     const thirdColumn = function (x) { return x >= 251 && x <= 298};
     const fourthColumn = function (x) { return x >= 300 && x <= 398};
@@ -129,6 +129,7 @@ class Character {
   render() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   }
+
   //movement
   handleInput(input) {
     //dead people dont move
@@ -154,7 +155,6 @@ class Character {
         }
       }
     }
-
 
     //stone collections
     if (this.x === stone.x && this.y === stone.y) {
@@ -211,7 +211,7 @@ class Character {
     for (let enemy of allEnemies) {
 
       if (currentRow(enemy) === currentRow(this) &&
-           currentColumn(enemy.x) === currentColumn(this.x)) {
+           currentColumn(enemy.x-10) === currentColumn(this.x)) {
          this.takeDamage()
       }
     }
@@ -250,6 +250,12 @@ const girlHorns = 'images/char-horn-girl.png';
 const pinkGirl = 'images/char-pink-girl.png';
 const girlPrincess = 'images/char-princess-girl.png';
 
+//bug skins
+const blinkySkin = 'images/enemy-bug-blinky.png';
+const clydeSkin = 'images/enemy-bug.png';
+const inkySkin = 'images/enemy-bug-inky.png';
+const pinkySkin = 'images/enemy-bug-pinky.png';
+
 //the goal is for the charicter to gather all of the stones in the river
 // Now instantiate your objects.
 
@@ -273,16 +279,17 @@ const player = new Character(characterSelect);
 
 const allEnemies = [];
 //red
-const blinky = new Enemy(200, FIRSTLANESPAWN, 'images/enemy-bug-blinky.png');
+const blinky = new Enemy(250, FIRSTLANESPAWN, blinkySkin);
 allEnemies.push(blinky);
 //orange
-const clyde = new Enemy(300, SECONDLANESPAWN, 'images/enemy-bug.png');
+const clyde = new Enemy(300, SECONDLANESPAWN, clydeSkin);
 allEnemies.push(clyde);
 //blue
-const inky = new Enemy(200, THIRDLANESPAWN, 'images/enemy-bug-inky.png');
+const inky = new Enemy(100, THIRDLANESPAWN, inkySkin);
+inky.x = 180;
 allEnemies.push(inky);
 //pink
-const pinky = new Enemy(90, THIRDLANESPAWN, 'images/enemy-bug-pinky.png');
+const pinky = new Enemy(90, THIRDLANESPAWN, pinkySkin);
 allEnemies.push(pinky);
 
 const stone = new Stone(4, 0, 'images/Gem Blue.png');
