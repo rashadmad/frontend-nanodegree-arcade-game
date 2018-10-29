@@ -5,6 +5,35 @@ const THIRDLANESPAWN = 80;
 
 const offScreen = -60;
 
+
+let currentColumn = function (xCoordinate) {
+  let result = '';
+  if (xCoordinate >= 4 && xCoordinate <= 101) {
+    result = 'firstColumn'
+  } else if (xCoordinate >= 102 && xCoordinate <= 200) {
+    result = 'secondColumn'
+  } else if (xCoordinate >= 201 && xCoordinate <= 298) {
+    result = 'thirdColumn'
+  } else if (xCoordinate >= 300 && xCoordinate <= 398) {
+    result = 'fourthColumn'
+  } else {
+    result = 'fifthColumn'
+  }
+  return result;
+};
+
+let currentRow = function(objectWithYCoordinate) {
+  let result = ''
+  if (objectWithYCoordinate.y >= 80 && objectWithYCoordinate.y <= 100) {
+    result = 'firstLane'
+  } else if (objectWithYCoordinate.y >= 101 && objectWithYCoordinate.y <= 180) {
+    result = 'secondLane'
+  } else if (objectWithYCoordinate.y >= 181 && objectWithYCoordinate.y <= 240) {
+    result = 'thirdLane'
+  }
+  return result
+  }
+
 // Enemies our player must avoid
 class Enemy {
 
@@ -30,65 +59,29 @@ class Enemy {
     this.sprite = sprite;
   }
 
-  currentColumn() {
+  render() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+  };
+  update(dt) {
 
-
-    //column choices
-    const FIRSTCOLUMN = this.x >= 4 && this.x <= 90;
-    const SECONDCOLUMN = this.x >= 102 && this.x <= 160;
-    const THIRDCOLUMN = this.x >= 161 && this.x <= 250;
-    const FOURTHCOLUMN = this.x >= 310 && this.x <= 350;
-
-    let result = "";
-    if (FIRSTCOLUMN) {
-      result = 'firstColumn'
-    } else if (SECONDCOLUMN) {
-      result = 'secondColumn'
-    } else if (THIRDCOLUMN) {
-      result = 'thirdColumn'
-    } else if (FOURTHCOLUMN) {
-      result = 'fourthColumn'
+    //is enemey outside of boundary in other words reached its destination?
+    if (this.x < 500) {
+      this.x += this.speed * dt;
+      //Reset position to start
     } else {
-      result = 'fifthColumn'
+      this.resetPosition();
     }
-    return result;
-  }
+  };
 
-  currentLane() {
-    //row choices
-    const FIRSTLANE = this.y >= 80 && this.y <= 100;
-    const SECONDLANE = this.y >= 101 && this.y <= 180;
-    const THIRDLANE = this.y >= 181 && this.y <= 240;
-
-    let result = "";
-    if (FIRSTLANE) {
-      result = 'firstLane'
-    } else if (SECONDLANE) {
-      result = 'secondLane'
-    } else if (THIRDLANE) {
-      result = 'thirdLane'
+  currentColumn() {
+    //column choices
+    const firstColumn = function (x) {return x <= 101};
+    const secondColumn = function (x) { return x >= 101 && x <= 200};
+    const thirdColumn = function (x) { return x >= 251 && x <= 298};
+    const fourthColumn = function (x) { return x >= 300 && x <= 398};
+    const fifthColumn = function (x) { return x >= 401 };
     }
-    return result;
-  }
 }
-
-
-// Update the enemy's position
-Enemy.prototype.update = function(dt) {
-
-  //is enemey outside of boundary in other words reached its destination?
-  if (this.x < 500) {
-    this.x += this.speed * dt;
-    //Reset position to start
-  } else {
-    this.resetPosition();
-  }
-};
-
-// Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
-  ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
 
 /*player class*/
 class Character {
@@ -131,47 +124,6 @@ class Character {
   respawn() {
     this.x = this.startingX;
     this.y = this.startingY;
-  }
-
-  currentColumn() {
-    //column choices
-    const FIRSTCOLUMN = this.x >= 4 && this.x <= 90;
-    const SECONDCOLUMN = this.x >= 102 && this.x <= 160;
-    const THIRDCOLUMN = this.x >= 210 && this.x <= 230;
-    const FOURTHCOLUMN = this.x >= 360 && this.x <= 396;
-
-    let result = "";
-    if (FIRSTCOLUMN) {
-      result = 'firstColumn'
-    } else if (SECONDCOLUMN) {
-      result = 'secondColumn'
-    } else if (THIRDCOLUMN) {
-      result = 'thirdColumn'
-    } else if (FOURTHCOLUMN) {
-      result = 'fourthColumn'
-    } else {
-      result = 'fifthColumn'
-    }
-    return result;
-  }
-
-  currentLane() {
-
-    //row choices
-    const FIRSTLANE = this.y >= 80 && this.y <= 100;
-    const SECONDLANE = this.y >= 101 && this.y <= 180;
-    const THIRDLANE = this.y >= 181 && this.y <= 240;
-
-
-    let result = "";
-    if (FIRSTLANE) {
-      result = 'firstLane'
-    } else if (SECONDLANE) {
-      result = 'secondLane'
-    } else if (THIRDLANE) {
-      result = 'thirdLane'
-    }
-    return result;
   }
 
   render() {
@@ -258,8 +210,9 @@ class Character {
   update() {
     for (let enemy of allEnemies) {
 
-      if (enemy.currentLane() === this.currentLane() && enemy.currentColumn() === this.currentColumn()) {
-        this.takeDamage();
+      if (currentRow(enemy) === currentRow(this) &&
+           currentColumn(enemy.x) === currentColumn(this.x)) {
+         this.takeDamage()
       }
     }
   }
@@ -272,11 +225,11 @@ class Heart {
     this.y = y;
     this.sprite = 'images/Heart.png';
   }
+  render(){
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+  }
 }
 
-Heart.prototype.render = function() {
-  ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
 
 class Stone {
   constructor(x, y, sprite = blue) {
