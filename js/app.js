@@ -3,37 +3,9 @@ const FIRSTLANESPAWN = 240;
 const SECONDLANESPAWN = 160;
 const THIRDLANESPAWN = 80;
 
+const COLUMN_X_COORDINATES = [4, 90, 102, 160, 172, 258, 270, 310, 322, 402];
+
 const offScreen = -60;
-
-
-
-let currentColumn = function (xCoordinate) {
-  let result = '';
-  if (xCoordinate >= 4 && xCoordinate <= 101) {
-    result = 'FIRSTCOLUMN'
-  } else if (xCoordinate >= 102 && xCoordinate <= 200) {
-    result = 'SECONDCOLUMN'
-  } else if (xCoordinate >= 201 && xCoordinate <= 298) {
-    result = 'THIRDCOLUMN'
-  } else if (xCoordinate >= 300 && xCoordinate <= 398) {
-    result = 'FOURTHCOLUMN'
-  } else {
-    result = 'FIFTHCOLUMN'
-  }
-  return result;
-};
-
-let currentRow = function(objectWithYCoordinate) {
-  let result = ''
-  if (objectWithYCoordinate.y >= 80 && objectWithYCoordinate.y <= 100) {
-    result = 'firstLane'
-  } else if (objectWithYCoordinate.y >= 101 && objectWithYCoordinate.y <= 180) {
-    result = 'secondLane'
-  } else if (objectWithYCoordinate.y >= 181 && objectWithYCoordinate.y <= 240) {
-    result = 'thirdLane'
-  }
-  return result
-  }
 
 //bug skins
 const blinkySkin = 'images/enemy-bug-blinky.png';
@@ -65,7 +37,21 @@ class Enemy {
     // a helper we've provided to easily load images
     this.sprite = sprite;
   }
-
+  currentColumn() {
+    let result = "";
+    if(this.x >= COLUMN_X_COORDINATES[0] && this.x <= COLUMN_X_COORDINATES[1]){
+      result = 'firstColumn';
+    } else if(this.x >= COLUMN_X_COORDINATES[2] && this.x <= COLUMN_X_COORDINATES[3]){
+      result = 'secoundColumn';
+    } else if(this.x >= COLUMN_X_COORDINATES[4] && this.x <= COLUMN_X_COORDINATES[5]){
+      result = 'thirdColumn';
+    } else if(this.x >= COLUMN_X_COORDINATES[6] && this.x <= COLUMN_X_COORDINATES[7]){
+      result = 'fourthColumn';
+    } else if(this.x >= COLUMN_X_COORDINATES[8] && this.x <= COLUMN_X_COORDINATES[9]) {
+      result = 'fithColumn';
+    }
+    return result
+  }
   render() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
   };
@@ -80,14 +66,6 @@ class Enemy {
     }
   }
 
-  currentColumn() {
-    //column choices
-    const FIRSTCOLUMN = function (x) {return x <= 10};
-    const SECONDCOLUMN = function (x) { return x >= 101 && x <= 200};
-    const THIRDCOLUMN = function (x) { return x >= 251 && x <= 298};
-    const FOURTHCOLUMN = function (x) { return x >= 300 && x <= 398};
-    const FIFTHCOLUMN = function (x) { return x >= 401};
-    }
 }
 
 /*player class*/
@@ -111,6 +89,21 @@ class Character {
     this.sprite = sprite;
     /*methods*/
     //create character onscreen
+  }
+  currentColumn() {
+    let result = "";
+    if(this.x >= COLUMN_X_COORDINATES[0] && this.x <= COLUMN_X_COORDINATES[1]){
+      result = 'firstColumn';
+    } else if(this.x >= COLUMN_X_COORDINATES[2] && this.x <= COLUMN_X_COORDINATES[3]){
+      result = 'secoundColumn';
+    } else if(this.x >= COLUMN_X_COORDINATES[4] && this.x <= COLUMN_X_COORDINATES[5]){
+      result = 'thirdColumn';
+    } else if(this.x >= COLUMN_X_COORDINATES[6] && this.x <= COLUMN_X_COORDINATES[7]){
+      result = 'fourthColumn';
+    } else {
+      result = 'fithColumn';
+    }
+    return result
   }
 
   takeDamage() {
@@ -140,6 +133,7 @@ class Character {
 
   //movement
   handleInput(input) {
+    console.log(blinky.x);
     //dead people dont move
     if (this.health > 0 && this.stonesCollected < 5) {
       let horizontalMovement = 98;
@@ -214,15 +208,17 @@ class Character {
   }
 
   //collision system for our bugs
-  update() {
-    for (let enemy of allEnemies) {
-      if (currentRow(enemy) === currentRow(this) &&
-           currentColumn(enemy.x-buffer) === currentColumn(this.x)) {
-         this.takeDamage()
+      update() {
+      for (let enemy of allEnemies) {
+
+        if (enemy.y === this.y){
+          if(enemy.currentColumn() === this.currentColumn()){
+            this.takeDamage();
+          }
+        }
       }
     }
   }
-}
 
 //symbols that represent if a character takes takeDamage
 class Heart {
