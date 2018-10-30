@@ -107,7 +107,7 @@ class Character {
   }
 
   takeDamage() {
-    console.log("ouch");
+
     //lower health
     this.health -= 1;
     allHearts.pop();
@@ -122,7 +122,6 @@ class Character {
 
   //reset position
   respawn() {
-    console.log("respawn")
     this.x = this.startingX;
     this.y = this.startingY;
   }
@@ -133,7 +132,6 @@ class Character {
 
   //movement
   handleInput(input) {
-    console.log(blinky.x);
     //dead people dont move
     if (this.health > 0 && this.stonesCollected < 5) {
       let horizontalMovement = 98;
